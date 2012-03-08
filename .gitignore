@@ -1,0 +1,9 @@
+Makefile
+quillliquifyplugin/Makefile
+galleryliquifyplugin/Makefile
+*.o
+*.so
+debian/*.log
+debian/gallery-plugin-liquify
+debian/gallery-plugin-liquify-dbg
+moc_*.cpp

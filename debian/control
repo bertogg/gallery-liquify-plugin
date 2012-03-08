@@ -1,0 +1,22 @@
+Source: gallery-plugin-liquify
+Section: graphics
+Priority: extra
+Maintainer: Alberto Garcia <agarcia@igalia.com>
+Build-Depends: debhelper (>= 7.0.50),
+               libgallerycore-dev (>= 1.110519.2),
+               libquillimagefilter-dev (>= 1.110523.0)
+Standards-Version: 3.9.1
+
+Package: gallery-plugin-liquify
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends}
+Description: Liquify gallery plugin
+ This is the liquify gallery plugin.
+
+Package: gallery-plugin-liquify-dbg
+Section: debug
+Architecture: any
+Depends: ${misc:Depends}, ${shlibs:Depends},
+         gallery-plugin-liquify (= ${binary:Version})
+Description: Liquify gallery plugin
+ This is the liquify gallery plugin.
