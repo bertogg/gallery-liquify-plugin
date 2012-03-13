@@ -128,7 +128,7 @@ GalleryLiquifyPlugin::name() const
 QString
 GalleryLiquifyPlugin::iconID() const
 {
-    return QString("icon-m-camera-filter-black-white-screen");
+    return QString("icon-m-image-edit-liquify");
 }
 
 
