@@ -1,5 +1,5 @@
 Source: gallery-plugin-liquify
-Section: graphics
+Section: user/multimedia
 Priority: extra
 Maintainer: Alberto Garcia <agarcia@igalia.com>
 Build-Depends: debhelper (>= 7.0.50),
