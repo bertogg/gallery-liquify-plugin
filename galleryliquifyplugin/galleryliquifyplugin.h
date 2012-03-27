@@ -25,7 +25,6 @@
 
 #include <galleryeditplugin.h>
 #include <QObject>
-#include <QTime>
 #include <QGraphicsSceneMouseEvent>
 #include <MGridLayoutPolicy>
 #include <MSlider>
@@ -53,8 +52,8 @@ protected:
 
 private:
     Q_DISABLE_COPY(GalleryLiquifyPlugin)
-    QPoint pos;
-    QTime time;
+    QPoint pressPos;
+    QPoint releasePos;
     MGridLayoutPolicy* m_landscapePolicy;
     MGridLayoutPolicy* m_portraitPolicy;
     MSlider *m_radiusSlider;

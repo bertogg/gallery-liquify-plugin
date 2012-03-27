@@ -18,6 +18,10 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, see http://www.gnu.org/licenses/
+ *
+ * The code for the liquify algorithm is based on the iwarp plugin 0.1
+ * of The GIMP, which is (C) 1997 Norbert Schmitz and released under
+ * the GNU GPL.
  */
 
 #include "galleryliquifyplugin.h"
@@ -34,7 +38,6 @@ GalleryLiquifyPlugin::GalleryLiquifyPlugin(QObject* parent):
     m_radiusSlider(0),
     m_enlargeButton(0)
 {
-    time.start();
 }
 
 
@@ -107,12 +110,14 @@ GalleryLiquifyPlugin::createToolBarWidget(QGraphicsItem* parent)
 bool
 GalleryLiquifyPlugin::receiveMouseEvent(QGraphicsSceneMouseEvent *event)
 {
+    Qt::MouseButtons button = event->button();
     Qt::MouseButtons buttons = event->buttons();
-    if (buttons & Qt::LeftButton) {
-        if (time.elapsed() > 20) {
-            this->pos = event->pos().toPoint();
+    if (button == Qt::LeftButton) {
+        if (buttons & Qt::LeftButton) {
+            this->pressPos = event->pos().toPoint();
+        } else {
+            this->releasePos = event->pos().toPoint();
             performEditOperation();
-            time.restart();
         }
     }
     return true;
@@ -136,10 +141,14 @@ void GalleryLiquifyPlugin::performEditOperation()
 {
     GalleryEditUiProvider *provider = editUiProvider();
     if (provider) {
-        const QPoint imagePos = provider->convertScreenCoordToImageCoord(this->pos);
-        if (imagePos != QPoint(-1, -1)) {
+        const QPoint imagePressPos =
+            provider->convertScreenCoordToImageCoord(this->pressPos);
+        const QPoint imageReleasePos =
+            provider->convertScreenCoordToImageCoord(this->releasePos);
+        if (imagePressPos != QPoint(-1, -1) && imageReleasePos != QPoint(-1, -1)) {
             QHash<QuillImageFilter::QuillFilterOption, QVariant> options;
-            options.insert("pos", QVariant(imagePos));
+            options.insert("posFrom", QVariant(imagePressPos));
+            options.insert("posTo", QVariant(imageReleasePos));
             options.insert("radius", QVariant(m_radiusSlider->value()));
             options.insert("enlarge", QVariant(m_enlargeButton->isChecked()));
             provider->runEditFilter("com.igalia.liquify", options);

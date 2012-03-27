@@ -27,6 +27,8 @@
 #include <QuillImageFilterInterface>
 #include <QuillImageFilterImplementation>
 
+struct vector_2d;
+
 class QuillLiquifyPlugin:
     public QObject,
     public QuillImageFilterInterface
@@ -43,7 +45,6 @@ private:
     Q_DISABLE_COPY(QuillLiquifyPlugin)
 };
 
-
 class Liquify:
     public QuillImageFilterImplementation
 {
@@ -57,9 +58,20 @@ public:
     QVariant option(const QString &option) const;
 
 private:
+    void deform(const QuillImage &srcImg, QuillImage &dstImg,
+                int x, int y, double vx, double vy) const;
+    uchar transparent_color(int x, int y) const;
+    void get_deform_vector(double x, double y, double *xv, double *yv) const;
+    QRgb get_pixel(const QuillImage &img, int x, int y) const;
+    QRgb get_point(const QuillImage &img, double x, double y) const;
     bool enlarge;
     int radius;
-    QPoint pos;
+    QPoint posFrom;
+    QPoint posTo;
+    mutable vector_2d *deform_vectors;
+    vector_2d *deform_area_vectors;
+    double *filter;
+    mutable int img_width, img_height;
 };
 
 #endif /* !__quillliquifyplugin_h__ */
