@@ -64,7 +64,6 @@ private:
     void get_deform_vector(double x, double y, double *xv, double *yv) const;
     QRgb get_pixel(const QuillImage &img, int x, int y) const;
     QRgb get_point(const QuillImage &img, double x, double y) const;
-    bool enlarge;
     int radius;
     QPoint posFrom;
     QPoint posTo;

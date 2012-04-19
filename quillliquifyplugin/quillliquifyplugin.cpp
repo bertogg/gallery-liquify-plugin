@@ -315,8 +315,6 @@ Liquify::setOption(const QString &option, const QVariant &value)
         this->posTo = value.toPoint();
     } else if (option == "radius") {
         this->radius = value.toInt();
-    } else if (option == "enlarge") {
-        this->enlarge = value.toBool();
     } else {
         retValue = false;
     }
@@ -333,8 +331,6 @@ Liquify::option(const QString &option) const
         return QVariant(this->posTo);
     } else if (option == "radius") {
         return QVariant(this->radius);
-    } else if (option == "enlarge") {
-        return QVariant(this->enlarge);
     } else {
         return QVariant();
     }

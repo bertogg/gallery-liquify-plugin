@@ -35,8 +35,7 @@ GalleryLiquifyPlugin::GalleryLiquifyPlugin(QObject* parent):
     GalleryEditPlugin(parent),
     m_landscapePolicy(0),
     m_portraitPolicy(0),
-    m_radiusSlider(0),
-    m_enlargeButton(0)
+    m_radiusSlider(0)
 {
 }
 
@@ -74,19 +73,13 @@ GalleryLiquifyPlugin::createToolBarWidget(QGraphicsItem* parent)
     m_radiusSlider->setRange(0, 100);
     m_radiusSlider->setValue(50);
 
-    m_enlargeButton = new MButton();
-    m_enlargeButton->setViewType(MButton::checkboxType);
-    m_enlargeButton->setCheckable(true);
-
     m_landscapePolicy->setContentsMargins(0,0,0,0);
     m_landscapePolicy->setSpacing(0);
     m_landscapePolicy->addItem(m_radiusSlider, 0, 0, Qt::AlignCenter);
-    m_landscapePolicy->addItem(m_enlargeButton, 0, 1, Qt::AlignCenter);
 
     m_portraitPolicy->setContentsMargins(0,0,0,0);
     m_portraitPolicy->setSpacing(0);
     m_portraitPolicy->addItem(m_radiusSlider, 0, 0, Qt::AlignCenter);
-    m_portraitPolicy->addItem(m_enlargeButton, 0, 1, Qt::AlignCenter);
 
     mainLayout->setLandscapePolicy(m_landscapePolicy);
     mainLayout->setPortraitPolicy(m_portraitPolicy);
@@ -150,7 +143,6 @@ void GalleryLiquifyPlugin::performEditOperation()
             options.insert("posFrom", QVariant(imagePressPos));
             options.insert("posTo", QVariant(imageReleasePos));
             options.insert("radius", QVariant(m_radiusSlider->value()));
-            options.insert("enlarge", QVariant(m_enlargeButton->isChecked()));
             provider->runEditFilter("com.igalia.liquify", options);
         }
     }

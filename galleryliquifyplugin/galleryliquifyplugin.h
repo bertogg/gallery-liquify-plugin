@@ -57,7 +57,6 @@ private:
     MGridLayoutPolicy* m_landscapePolicy;
     MGridLayoutPolicy* m_portraitPolicy;
     MSlider *m_radiusSlider;
-    MButton *m_enlargeButton;
 };
 
 #endif /* !__galleryliquifyplugin_h__ */
