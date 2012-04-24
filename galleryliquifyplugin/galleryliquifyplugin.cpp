@@ -35,7 +35,8 @@ GalleryLiquifyPlugin::GalleryLiquifyPlugin(QObject* parent):
     GalleryEditPlugin(parent),
     m_landscapePolicy(0),
     m_portraitPolicy(0),
-    m_radiusSlider(0)
+    m_radiusSlider(0),
+    m_enabled(true)
 {
 }
 
@@ -54,6 +55,19 @@ bool
 GalleryLiquifyPlugin::zoomingAllowed() const
 {
     return true;
+}
+
+void GalleryLiquifyPlugin::activate()
+{
+    if (editUiProvider()) {
+        QSize size = editUiProvider()->fullImageSize();
+        m_enabled = size.height() <= 512 && size.width() <= 512;
+        if (!m_enabled) {
+            showMessageBox("Liquify plugin limitations",
+                           "The Gallery Liquify Plugin is currently "
+                           "limited to small images (up to 512x512).");
+        }
+    }
 }
 
 QGraphicsWidget*
@@ -110,7 +124,11 @@ GalleryLiquifyPlugin::receiveMouseEvent(QGraphicsSceneMouseEvent *event)
             this->pressPos = event->pos().toPoint();
         } else {
             this->releasePos = event->pos().toPoint();
-            performEditOperation();
+            if (m_enabled) {
+                performEditOperation();
+            } else {
+                showInfoBanner("Plugin disabled for this image size");
+            }
         }
     }
     return true;
@@ -133,7 +151,7 @@ GalleryLiquifyPlugin::iconID() const
 void GalleryLiquifyPlugin::performEditOperation()
 {
     GalleryEditUiProvider *provider = editUiProvider();
-    if (provider) {
+    if (provider && m_enabled) {
         const QPoint imagePressPos =
             provider->convertScreenCoordToImageCoord(this->pressPos);
         const QPoint imageReleasePos =
@@ -147,6 +165,43 @@ void GalleryLiquifyPlugin::performEditOperation()
         }
     }
     emit editOperationPerformed();
+}
+
+MMessageBox *
+GalleryLiquifyPlugin::showMessageBox(const QString& title, const QString& text) const
+{
+    MMessageBox* messageBox = new MMessageBox(title, "");
+    MLabel* innerLabel = new MLabel(messageBox);
+    innerLabel->setWordWrap(true);
+    innerLabel->setWrapMode(QTextOption::WrapAtWordBoundaryOrAnywhere);
+    innerLabel->setStyleName("CommonQueryText");
+    innerLabel->setText(text);
+    innerLabel->setAlignment(Qt::AlignHCenter);
+    messageBox->setCentralWidget(innerLabel);
+
+    connect(innerLabel, SIGNAL(linkActivated(QString)),
+            this, SLOT(onAboutLinkActivated(QString)));
+    connect(this, SIGNAL(deactivated()),
+            messageBox, SLOT(disappear()));
+
+    messageBox->appear(MSceneWindow::DestroyWhenDone);
+
+    return messageBox;
+}
+
+MBanner *
+GalleryLiquifyPlugin::showInfoBanner(const QString& title) const
+{
+    MBanner *infoBanner = new MBanner;
+    infoBanner->setTitle(title);
+    infoBanner->setStyleName("InformationBanner");
+    infoBanner->model()->setDisappearTimeout(2000);
+    connect(this, SIGNAL(deactivated()),
+            infoBanner, SLOT(disappear()));
+
+    infoBanner->appear(MApplication::activeWindow(), MSceneWindow::DestroyWhenDone);
+
+    return infoBanner;
 }
 
 Q_EXPORT_PLUGIN2(galleryliquifyplugin, GalleryLiquifyPlugin)

@@ -29,6 +29,8 @@
 #include <MGridLayoutPolicy>
 #include <MSlider>
 #include <MButton>
+#include <MBanner>
+#include <MMessageBox>
 
 class GalleryLiquifyPlugin: public GalleryEditPlugin
 {
@@ -46,17 +48,21 @@ public:
 
 public Q_SLOTS:
     void performEditOperation();
+    void activate();
 
 protected:
     QGraphicsWidget* createToolBarWidget(QGraphicsItem* parent = 0);
 
 private:
     Q_DISABLE_COPY(GalleryLiquifyPlugin)
+    MBanner *showInfoBanner(const QString& title) const;
+    MMessageBox *showMessageBox(const QString& title, const QString& text) const;
     QPoint pressPos;
     QPoint releasePos;
     MGridLayoutPolicy* m_landscapePolicy;
     MGridLayoutPolicy* m_portraitPolicy;
     MSlider *m_radiusSlider;
+    bool m_enabled;
 };
 
 #endif /* !__galleryliquifyplugin_h__ */
