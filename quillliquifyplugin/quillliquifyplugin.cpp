@@ -18,6 +18,10 @@
  *
  * You should have received a copy of the GNU Lesser General Public
  * License along with this program. If not, see http://www.gnu.org/licenses/
+ *
+ * The code for the liquify algorithm is based on the iwarp plugin 0.1
+ * of The GIMP, which is (C) 1997 Norbert Schmitz and released under
+ * the GNU GPL.
  */
 
 #include "quillliquifyplugin.h"
